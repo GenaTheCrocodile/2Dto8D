@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+from pydub import AudioSegment
+from os.path import isfile
+from os import system
+from sys import argv
+
+reverberance = 50
+SECONDS = 5000
+MIN_FADE_VOL = -15.0
+
+if len(argv) < 3:
+    exit('\n Usage: 2dto8d  "input.mp3"  "output.mp3"  \
+[reverberance (0 - 100, default 50)]  [Min. fade volume (default -15.0 dB)]\n')
+
+if len(argv) >= 4:
+    try:
+        argv[3] = int(argv[3])
+    except ValueError:
+        exit('Bad reverberance value')
+
+    if argv[3] < 0:
+        reverberance = 0
+    elif argv[3] > 100:
+        reverberance = 100
+    else:
+        reverberance = argv[3]
+if len(argv) >= 5:
+    try:
+        MIN_FADE_VOL = float(argv[4])
+    except ValueError:
+        exit('Bad volume value')
+
+if not isfile(argv[1]):
+    exit(f'{argv[1]} not found')
+
+
+
+
+print('[2dto8d] Starting')
+print(f'[2dto8d] Current settings: reverberance {reverberance} | Min. fade volume {MIN_FADE_VOL}')
+print('[2dto8d] Adding reverb')
+
+
+
+
+system(f'sox "{argv[1]}" .reverbed.wav reverb {reverberance}')
+
+song = AudioSegment.from_wav('.reverbed.wav')
+song = song + AudioSegment.silent(duration = SECONDS)
+
+
+
+
+print('[2dto8d] Separating channels')
+
+
+
+
+left = song.pan(-1)
+right = song.pan(1)
+faded_left = AudioSegment.silent(duration = 0)
+faded_right = AudioSegment.silent(duration = 0)
+
+
+
+print('[2dto8d] Working with left channel')
+
+
+
+i = 0
+
+while len(faded_left) < len(song):
+    faded_left += left[i:i + SECONDS].fade(from_gain = MIN_FADE_VOL, start = 0, duration = SECONDS)
+    i += SECONDS
+    faded_left += left[i:i + SECONDS].fade(to_gain = MIN_FADE_VOL, start = 0,duration = SECONDS)
+    i += SECONDS
+
+
+
+print('[2dto8d] Working with right channel')
+
+
+
+i = 0
+
+while len(faded_right) < len(song):
+    faded_right += right[i:i + SECONDS].fade(to_gain = MIN_FADE_VOL, start = 0, duration = SECONDS)
+    i += SECONDS
+    faded_right += right[i:i + SECONDS].fade(from_gain = MIN_FADE_VOL, start = 0, duration = SECONDS)
+    i += SECONDS
+
+
+print('[2dto8d] Merging')
+
+
+final = faded_right.overlay(faded_left)
+final = final[:len(song[:-SECONDS])]
+
+
+print('[2dto8d] Exporting')
+
+
+final.export('.reverbed.wav', 'wav')
+
+system(f'sox .reverbed.wav "{argv[2]}"')
+system('rm .reverbed.wav')
+
+print('[2dto8d] Done')
