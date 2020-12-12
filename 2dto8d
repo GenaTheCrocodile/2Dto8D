@@ -7,6 +7,7 @@ from sys import argv
 reverberance = 50
 SECONDS = 6000
 MIN_FADE_VOL = -15.0
+FADE_TIME = 1500
 
 if len(argv) < 3:
     exit('\n Usage: 2dto8d  "input.mp3"  "output.mp3"  \
@@ -77,11 +78,11 @@ print('[2dto8d] Working with left channel')
 i = 0
 
 while len(faded_left) < len(song):
-    faded_left += left[i:i + SECONDS - 2000].fade(from_gain = MIN_FADE_VOL, start = 0, duration = SECONDS - 2000)
-    faded_left += left[i + SECONDS - 2000:i + SECONDS]
+    faded_left += left[i:i + SECONDS - FADE_TIME].fade(from_gain = MIN_FADE_VOL, start = 0, duration = SECONDS - FADE_TIME)
+    faded_left += left[i + SECONDS - FADE_TIME:i + SECONDS]
     i += SECONDS
-    faded_left += left[i:i + SECONDS - 2000].fade(to_gain = MIN_FADE_VOL, start = 0,duration = SECONDS - 2000)
-    faded_left += left[i + SECONDS - 2000:i + SECONDS] + MIN_FADE_VOL
+    faded_left += left[i:i + SECONDS - FADE_TIME].fade(to_gain = MIN_FADE_VOL, start = 0,duration = SECONDS - FADE_TIME)
+    faded_left += left[i + SECONDS - FADE_TIME:i + SECONDS] + MIN_FADE_VOL
     i += SECONDS
 
 
@@ -93,11 +94,11 @@ print('[2dto8d] Working with right channel')
 i = 0
 
 while len(faded_right) < len(song):
-    faded_right += right[i:i + SECONDS - 2000].fade(to_gain = MIN_FADE_VOL, start = 0, duration = SECONDS - 2000)
-    faded_right += right[i + SECONDS - 2000:i + SECONDS] + MIN_FADE_VOL
+    faded_right += right[i:i + SECONDS - FADE_TIME].fade(to_gain = MIN_FADE_VOL, start = 0, duration = SECONDS - FADE_TIME)
+    faded_right += right[i + SECONDS - FADE_TIME:i + SECONDS] + MIN_FADE_VOL
     i += SECONDS
-    faded_right += right[i:i + SECONDS - 2000].fade(from_gain = MIN_FADE_VOL, start = 0, duration = SECONDS - 2000)
-    faded_right += right[i + SECONDS - 2000:i + SECONDS]
+    faded_right += right[i:i + SECONDS - FADE_TIME].fade(from_gain = MIN_FADE_VOL, start = 0, duration = SECONDS - FADE_TIME)
+    faded_right += right[i + SECONDS - FADE_TIME:i + SECONDS]
     i += SECONDS
 
 
