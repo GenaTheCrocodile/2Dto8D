@@ -11,5 +11,6 @@ pip install --user pydub
 ## Usage
 
 ```bash
-Usage: 2dto8d  "input.mp3"  "output.mp3"  [reverberance (0 - 100, default 50)]  [Min. fade volume (default -15.0 dB)]
+Usage: 2dto8d  "input.mp3"  "output.mp3"  \
+[reverberance (0 - 100, default 50)]  [Min. fade volume (default -15.0 dB)]  [Channel switching time (default 6 seconds)]
 ```
