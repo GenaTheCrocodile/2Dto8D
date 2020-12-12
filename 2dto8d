@@ -7,11 +7,11 @@ from sys import argv
 reverberance = 50
 SECONDS = 6000
 MIN_FADE_VOL = -15.0
-FADE_TIME = 1500
+FADE_TIME = 1000
 
 if len(argv) < 3:
     exit('\n Usage: 2dto8d  "input.mp3"  "output.mp3"  \
-[reverberance (0 - 100, default 50)]  [Min. fade volume (default -15.0 dB)]  [Channel switching time (default 6 seconds)]\n')
+[reverberance (0 - 100, default 50)]  [Min. fade volume (default -15.0 dB)]  [Channel switching time (default 6 seconds)]  [Fade time (default 1 second)]\n')
 
 if len(argv) >= 4:
     try:
@@ -33,10 +33,19 @@ if len(argv) >= 5:
 if len(argv) >= 6:
     try:
         SECONDS = int(float(argv[5]) * 1000)
-        if SECONDS < 3000:
-            exit('Bad time value (Min. value = 3 seconds)')
+        if SECONDS <= 0:
+            exit('"Channel_switching_time" must be greater than 0')
     except ValueError:
         exit('Bad time value')
+if len(argv) >= 7:
+    try:
+        FADE_TIME = int(float(argv[6]) * 1000)
+        if FADE_TIME > SECONDS:
+            exit('"Channel_switching_time" can not be less than "Fade_time"')
+        elif FADE_TIME < 0:
+            exit('"Fade_time" must be greater or equal to 0')
+    except ValueError:
+        exit('Bad fade time value')
 
 if not isfile(argv[1]):
     exit(f'{argv[1]} not found')
@@ -45,7 +54,7 @@ if not isfile(argv[1]):
 
 
 print('[2dto8d] Starting')
-print(f'[2dto8d] Current settings: reverberance {reverberance} | Min._fade_volume {MIN_FADE_VOL} | Channel_switching_time {SECONDS / 1000}')
+print(f'[2dto8d] Current settings: reverberance {reverberance} | Min._fade_volume {MIN_FADE_VOL} | Channel_switching_time {SECONDS / 1000} | Fade_time {FADE_TIME / 1000}')
 print('[2dto8d] Adding reverb')
 
 
