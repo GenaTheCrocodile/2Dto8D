@@ -5,13 +5,13 @@ from os import system
 from sys import argv
 
 reverberance = 50
-SECONDS = 6000
+SECONDS = 3500
 MIN_FADE_VOL = -15.0
 FADE_TIME = 1000
 
 if len(argv) < 3:
     exit('\n Usage: 2dto8d  "input.mp3"  "output.mp3"  \
-[reverberance (0 - 100, default 50)]  [Min. fade volume (default -15.0 dB)]  [Channel switching time (default 6 seconds)]  [Fade time (default 1 second)]\n')
+[reverberance (0 - 100, default 50)]  [Min. fade volume (default -15.0 dB)]  [Channel switching time (default 3.5 seconds)]  [Fade time (default 1 second)]\n')
 
 if len(argv) >= 4:
     try:
