@@ -1,6 +1,6 @@
 # 2Dto8D
 
-Script for applying 8D effect on an audio
+Script for applying 8D effect on audio files
 
 ## Requirements
 
